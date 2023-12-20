@@ -1,0 +1,6 @@
+
+[project]
+name = "core-contracts"
+
+[repl]
+costs_version = 1

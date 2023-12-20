@@ -1,0 +1,22 @@
+{
+  "name": "clarity-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "friedger",
+  "license": "MIT",
+  "dependencies": {
+    "@hirosystems/clarinet-sdk": "^1.2.0",
+    "@stacks/transactions": "^6.11.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "vitest": "^1.1.0",
+    "chokidar-cli": "^3.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vitest-environment-clarinet": "^1.0.0"
+  }
+}

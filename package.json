@@ -1,0 +1,28 @@
+{
+  "name": "stacks-test-tools",
+  "version": "1.0.0",
+  "description": "Repository to hold defaults such as CONTRIBUTING, CODE_OF_CONDUCT and LICENSE (MIT)",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/stacks-network/stacks-test-tools.git"
+  },
+  "keywords": [
+    "stacks",
+    "blockchain",
+    "clarity",
+    "clarinet"
+  ],
+  "author": "friedger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stacks-network/stacks-test-tools/issues"
+  },
+  "homepage": "https://github.com/stacks-network/stacks-test-tools#readme",
+  "dependencies": {
+    "vitest": "^1.1.0"
+  }
+}
