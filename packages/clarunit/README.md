@@ -7,13 +7,9 @@ detect test files and test functions.
 An example Clarinet-sdk project using `clarunit` can be found in the `example`
 folder.
 
-**Note:** this is a pre-release to be able to both use the `clarunit` workflow
-as well as evaluate it. The package will eventually be moved into a monorepo
-and properly published on NPM under the Stacks organisation.
-
 ## Setup
 
-1. Install this repository as a dependency using `npm` or `yarn`. (Be sure to
+1. Install package `@stacks/clarunit` using your favourite package manager. (Be sure to
    pin the version!)
 2. Create a test file in your existing `tests` folder, you can use any name but
    using `clarunit.test.ts` is recommended.
