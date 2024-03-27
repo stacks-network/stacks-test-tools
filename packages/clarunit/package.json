@@ -4,6 +4,7 @@
   "description": "Clarunit, enables writing unit tests in Clarity",
   "main": "src/index.ts",
   "bin": "src/cli.ts",
+  "type": "module",
   "scripts": {
     "test": "vitest run -- --coverage"
   },
@@ -31,14 +32,14 @@
   },
   "homepage": "https://github.com/stacks-network/stacks-test-tools#readme",
   "dependencies": {
-    "@hirosystems/clarinet-sdk": "^1.2.0",
+    "@hirosystems/clarinet-sdk": "^2.4.1",
     "@stacks/transactions": "^6.11.0",
     "chokidar-cli": "^3.0.0",
     "path": "^0.12.7",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9",
-    "vitest": "^1.1.0",
-    "vitest-environment-clarinet": "^1.0.0"
+    "vite": "^5.2.6",
+    "vitest": "^1.4.0",
+    "vitest-environment-clarinet": "^2.0.0"
   },
   "devDependencies": {
     "fast-check": "^3.15.0"
