@@ -1,0 +1,81 @@
+name: Publish Packages
+
+on: 
+  push:
+    branches:
+      - main
+      - ci/check-version-and-publish # TODO: remove this
+
+jobs:
+  check_version_change:
+    name: Check Version Changes
+    runs-on: ubuntu-latest
+    outputs:
+      CHANGED: ${{steps.check_version.outputs.changed}}
+      PACKAGE_PATH: ${{steps.set_path.outputs.changed_package_path}}
+    steps:
+      - name: Checkout Code
+        id: checkout_code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Set Path
+        id: set_path
+        run: |
+          # Get the paths of changed files
+          changes_paths=$(git diff-tree --no-commit-id --name-only -r "${{ github.sha }}" | awk -F'/' '{print $1"/"$2}')
+
+          # Manifest names list
+          manifest_names=("package.json")
+
+          # Save the manifest path of the changed package in GitHub env and exit without error
+          for path in ${changes_paths}; do
+            if [[ $path == packages/* ]]; then
+              for manifest in "${manifest_names[@]}"; do
+                if [[ -f $path/$manifest ]]; then
+                  echo "changed_package_path=${path}" >> "$GITHUB_OUTPUT"
+                  echo "changed_manifest_path=${path}/${manifest}" >> "$GITHUB_OUTPUT"
+                  echo "package_changed=true" >> "$GITHUB_OUTPUT"
+                  exit 0
+                fi
+              done
+            fi
+          done
+
+          # If we haven't exited yet, no package was changed
+          echo "No package was changed in this commit!"
+          echo "package_changed=false" >> "$GITHUB_OUTPUT"
+
+      - name: Check Version
+        id: check_version
+        if: ${{ steps.set_path.outputs.package_changed == 'true' }}
+        uses: EndBug/version-check@53c9309fefac91a21f852d5ca69f33878280d2f5 # v2.1.3
+        with:
+          file-name: ${{ steps.set_path.outputs.changed_manifest_path }}
+
+  publish_to_npm:
+    name: Publish Changed Package
+    runs-on: ubuntu-latest
+    needs: check_version_change
+    if: ${{ needs.check_version_change.outputs.CHANGED == 'true' }}
+    steps:
+      - name: Checkout Code
+        id: checkout_code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
+      
+      - name: Setup Node
+        id: setup_node
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 #v4.0.2
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+      
+      - name: Publish Package
+        id: publish_package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        run: |
+          cd "$(echo '${{ needs.check_version_change.outputs.PACKAGE_PATH }}')"
+          npm ci
+          npm publish --access=public
