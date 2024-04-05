@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       CHANGED: ${{steps.check_version.outputs.changed}}
-      PACKAGE_PATH: ${{steps.set_path.outputs.changed_package_path}}
+      PACKAGE_PATH: ${{steps.set_path.outputs.changed_path}}
     steps:
       - name: Checkout Code
         id: checkout_code
@@ -33,7 +33,7 @@ jobs:
             if [[ $path == packages/* ]]; then
               for manifest in "${manifest_names[@]}"; do
                 if [[ -f $path/$manifest ]]; then
-                  echo "changed_package_path=${path}" >> "$GITHUB_OUTPUT"
+                  echo "changed_path=${path}" >> "$GITHUB_OUTPUT"
                   echo "changed_manifest_path=${path}/${manifest}" >> "$GITHUB_OUTPUT"
                   echo "package_changed=true" >> "$GITHUB_OUTPUT"
                   exit 0
@@ -69,12 +69,18 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
-      
+
+      - name: Test Package
+        id: test_package
+        run: |
+          cd ${{ needs.check_version_change.outputs.PACKAGE_PATH }}
+          npm ci
+          npm test
+
       - name: Publish Package
         id: publish_package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: |
-          cd "$(echo '${{ needs.check_version_change.outputs.PACKAGE_PATH }}')"
-          npm ci
-          npm publish --access=public
+        uses: JS-DevTools/npm-publish@19c28f1ef146469e409470805ea4279d47c3d35c # v3.1.1
+        with:
+          token: ${{ secrets.NODE_AUTH_TOKEN }}
+          package: ${{ needs.check_version_change.outputs.PACKAGE_PATH }}
+          access: public
