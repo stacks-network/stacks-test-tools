@@ -6,8 +6,8 @@ telemetry = false
 cache_dir = './.cache'
 requirements = []
 
-[contracts.mine-blocks_test]
-path = "tests/contracts/generator-tests/mine-blocks.clar"
+[contracts.annotations_test]
+path = "tests/contracts/generator-tests/annotations_test.clar"
 clarity_version = 2
 epoch = "2.1"
 
