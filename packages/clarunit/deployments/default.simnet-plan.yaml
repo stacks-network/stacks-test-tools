@@ -46,4 +46,12 @@ genesis:
     - cost-voting
     - bns
 plan:
-  batches: []
+  batches:
+    - id: 0
+      transactions:
+        - emulated-contract-publish:
+            contract-name: mine-blocks_test
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: tests/contracts/generator-tests/mine-blocks.clar
+            clarity-version: 2
+      epoch: "2.1"
