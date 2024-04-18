@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## Unrelease
 
-- fixes mine-blocks-before annotation
+- fixes mine-blocks-before annotation and caller annotation
 
 ## [0.0.1](https://github.com/stacks-network/stacks-test-tools) (2024-01-22)
 
