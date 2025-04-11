@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/stacks-network/stacks-test-tools.git"
+    "url": "git+ssh://git@github.com/stacks-network/clarunit.git"
   },
   "keywords": [
     "stacks",
@@ -28,9 +28,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stacks-network/stacks-test-tools/issues"
+    "url": "https://github.com/stacks-network/clarunit/issues"
   },
-  "homepage": "https://github.com/stacks-network/stacks-test-tools#readme",
+  "homepage": "https://github.com/stacks-network/clarunit#readme",
   "dependencies": {
     "@hirosystems/clarinet-sdk": "^2.4.1",
     "@stacks/transactions": "^6.11.0",
