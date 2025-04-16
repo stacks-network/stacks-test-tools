@@ -1,15 +1,13 @@
 import { Simnet, tx } from "@hirosystems/clarinet-sdk";
 import { describe, it } from "vitest";
-import {
-  extractTestAnnotations,
-} from "./parser/clarity-parser";
+import { extractTestAnnotations } from "./parser/clarity-parser";
 import { expectOkTrue, isValidTestFunction } from "./parser/test-helpers";
 import { FunctionAnnotations } from "./parser/clarity-parser-flow-tests";
 
 /**
  * Returns true if the contract is a test contract
  * @param contractName name of the contract
- * @returns 
+ * @returns
  */
 function isTestContract(contractName: string) {
   return (
@@ -32,22 +30,24 @@ export function generateUnitTests(simnet: Simnet) {
       const hasDefaultPrepareFunction =
         contract.functions.findIndex((f) => f.name === "prepare") >= 0;
 
+      const source = simnet.getContractSource(contractFQN)!;
+      const annotations: any = extractTestAnnotations(source);
+
       contract.functions.forEach((functionCall) => {
         if (!isValidTestFunction(functionCall)) {
           return;
         }
 
         const functionName = functionCall.name;
-        const source = simnet.getContractSource(contractFQN)!;
-        const annotations: any = extractTestAnnotations(source);
         const functionAnnotations: FunctionAnnotations =
           annotations[functionName] || {};
 
         const mineBlocksBefore =
-          parseInt(annotations["mine-blocks-before"] as string) || 0;
+          parseInt(functionAnnotations["mine-blocks-before"] as string) || 0;
 
-        const testDescription = `${functionCall.name}${functionAnnotations.name ? `: ${functionAnnotations.name}` : ""
-          }`;
+        const testDescription = `${functionCall.name}${
+          functionAnnotations.name ? `: ${functionAnnotations.name}` : ""
+        }`;
         it(testDescription, () => {
           // handle prepare function for this test
           if (hasDefaultPrepareFunction && !functionAnnotations.prepare)
@@ -56,10 +56,11 @@ export function generateUnitTests(simnet: Simnet) {
             delete functionAnnotations.prepare;
 
           // handle caller address for this test
-          const callerAddress = functionAnnotations.caller
-            ? annotations.caller[0] === "'"
-              ? `${(annotations.caller as string).substring(1)}`
-              : accounts.get(annotations.caller)!
+          const callerString = functionAnnotations.caller as string;
+          const callerAddress = callerString
+            ? callerString[0] === "'"
+              ? `${callerString.substring(1)}`
+              : accounts.get(callerString)!
             : accounts.get("deployer")!;
 
           if (functionAnnotations.prepare) {
